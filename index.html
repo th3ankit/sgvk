@@ -1,355 +1,395 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-
-// Roadmap Data
-const roadmapData = [
-  {
-    phase: "Phase 0: Pre-Selection & Backend Preparation",
-    dates: "July 17th – July 22nd, 2025",
-    milestones: [
-      {
-        id: "m0_1",
-        title: "Strategic District/Village Identification",
-        shortDesc: "Identify potential high-impact areas and villages for SGVK establishment.",
-        longDesc: "Review internal data, previous outreach efforts, and governmental lists of 'aspirational districts' to identify potential high-impact areas. Conduct rapid online research for villages within these districts that have demonstrated community engagement or prior development initiatives. Prioritize 10-15 potential villages (2-3 per aspirational district) based on likely readiness, existing basic infrastructure, and ease of access for a rapid inaugural launch."
-      },
-      {
-        id: "m0_2",
-        title: "Internal Team Mobilization & Roles Assignment",
-        shortDesc: "Form the core accelerated launch team and assign clear responsibilities.",
-        longDesc: "Designate a Core Project Lead responsible for overall coordination and final decision-making. Appoint Sub-Leads for Applications & Selection, Logistics & Procurement, Site Readiness & Launch Events, and Communications & Partnerships. Brief the entire team on the compressed timeline and the 'inaugural launch' objective. Establish daily stand-up meetings for rapid progress tracking and immediate problem-solving."
-      },
-      {
-        id: "m0_3",
-        title: "Draft Streamlined Application & MoU Templates",
-        shortDesc: "Prepare concise Expression of Interest (EoI) and simplified MoU forms.",
-        longDesc: "Develop a highly concise (1-2 page) Expression of Interest (EoI) form focusing on critical information. Draft a highly simplified, 1-page Memorandum of Understanding (MoU) template outlining mutual commitment for the *inaugural launch event*. Obtain rapid legal counsel review and internal organizational approval for both templates to minimize bureaucratic hurdles."
-      },
-      {
-        id: "m0_4",
-        title: "Initial Budget Allocation & Procurement Plan",
-        shortDesc: "Secure emergency funds and plan rapid procurement for demonstration equipment.",
-        longDesc: "Secure an initial, expedited budget allocation specifically for the 5 inaugural SGVK launches, covering essential demonstration equipment, travel for rapid site visits, and launch event costs. Identify pre-qualified vendors for essential demonstration equipment (telescopes, projectors, science kits, branding). Obtain pre-approval for fast-track purchasing and direct shipping immediately upon final village selection."
-      },
-      {
-        id: "m0_5",
-        title: "Communications & Outreach Strategy Finalization",
-        shortDesc: "Finalize announcement text and identify key district contacts for rapid dissemination.",
-        longDesc: "Write the official press release/announcement for July 23rd, clearly stating the SGVK vision, the ambitious National Space Day launch date, the streamlined application process, and the criteria. Identify specific, high-level contacts (e.g., District Collector, CEO Zila Parishad, District Education Officer) in the 5 aspirational districts for direct, personalized outreach. Prepare ready-to-publish content for the Foundation's website and social media channels."
-      },
-    ],
-  },
-  {
-    phase: "Phase 1: Rapid Selection & Initial Formalization",
-    dates: "July 23rd – August 5th, 2025",
-    milestones: [
-      {
-        id: "m1_1",
-        title: "Official Announcement of Call for Applications",
-        shortDesc: "Publicly release the SGVK application announcement across all channels.",
-        longDesc: "Publicly release the SGVK application announcement on the Space Education Foundation's official website. Post the announcement across all relevant social media platforms (Facebook, Twitter, Instagram, LinkedIn). Send direct, personalized emails/WhatsApp messages to the identified high-level district administration contacts and existing NGO networks in the aspirational districts. Distribute press releases to local and regional media outlets, emphasizing the National Space Day launch."
-      },
-      {
-        id: "m1_2",
-        title: "Accelerated Application Submission & Initial Screening",
-        shortDesc: "Implement streamlined application process and daily review of incoming EoIs.",
-        longDesc: "Set up a dedicated email inbox or activate an online form for EoI submissions, with automated acknowledgment. Assign a dedicated team member(s) to conduct daily, rigorous review and initial scoring of incoming EoIs against the pre-defined basic criteria. Maintain a real-time tracking sheet of all applications received, screened, and shortlisted. Flag applications from the Phase 0 'hotlist' for priority review."
-      },
-      {
-        id: "m1_3",
-        title: "Remote Assessment & Preliminary Shortlisting",
-        shortDesc: "Conduct virtual meetings/phone interviews with top-scoring applicants.",
-        longDesc: "Schedule and conduct short (30-45 minute) virtual meetings (e.g., Google Meet, WhatsApp video call) or intensive phone interviews with Gram Panchayat heads or designated village representatives from the top-scoring applications. During interviews, verify basic information, assess the level of community commitment, confirm the availability of a suitable (even basic) space, and gauge their understanding of the SGVK vision. Compile a refined shortlist of the top 2-3 strongest, most ready candidates per aspirational district (total 10-15 villages)."
-      },
-      {
-        id: "m1_4",
-        title: "Rapid Physical Site Visits & Final Selection",
-        shortDesc: "Deploy agile teams for quick site visits and make final village selections.",
-        longDesc: "Deploy small, agile site visit teams (1-2 persons, potentially leveraging existing field staff or local partners) to conduct quick (half-day to full-day per village) visits to the shortlisted villages. On-site, conduct a visual inspection of the proposed SGVK space, assess basic amenities, and engage briefly with local leaders and community members to confirm enthusiasm. Conduct brief, direct meetings with Gram Panchayat leaders to discuss immediate mutual commitments required for the August 23rd launch, including the signing of the streamlined MoU. Central project lead to make the final selection of 5 villages (one per aspirational district) by the end of August 5th, based on site visit reports and overall readiness. Immediately prepare and dispatch the streamlined MoUs for the 5 selected villages, ready for signing."
-      },
-    ],
-  },
-  {
-    phase: "Phase 2: Inaugural Setup & Launch Preparation",
-    dates: "August 6th – August 22nd, 2025",
-    milestones: [
-      {
-        id: "m2_1",
-        title: "Fast-Tracked Formal Agreements & Core Local Team Identification",
-        shortDesc: "Secure signed MoUs and identify key local point persons for each SGVK.",
-        longDesc: "Dispatch Foundation representatives (or leverage local contacts/partners) to the 5 selected villages for immediate signing of the streamlined MoU with the Gram Panchayat. Ensure signed copies are returned to the central office promptly. In each village, identify and onboard at least 1-2 key local persons who can serve as the initial point person/volunteer for the SGVK launch event and initial demonstrations. Establish direct and reliable communication channels (e.g., dedicated WhatsApp group, frequent phone calls) with these 5 local point persons."
-      },
-      {
-        id: "m2_2",
-        title: "Essential Equipment Procurement & Dispatch",
-        shortDesc: "Purchase and rapidly deliver basic demonstration equipment to all 5 sites.",
-        longDesc: "Execute immediate purchase orders for the pre-approved essential demonstration equipment (5 small/medium telescopes, 5 portable projectors, 5 basic science kits, essential stationery, and initial branding materials like a banner). Coordinate rapid, direct-to-village logistics for the delivery of this equipment to each of the 5 SGVK locations. Utilize courier services known for efficiency in rural areas. Confirm receipt of equipment by the designated local point persons and have them conduct a basic inventory check."
-      },
-      {
-        id: "m2_3",
-        title: "Basic Site Readiness & Logistics for Launch",
-        shortDesc: "Prepare the designated space for the inauguration and confirm logistics.",
-        longDesc: "Guide the local point persons (via phone/video calls) on preparing the designated space for the inauguration. This primarily involves ensuring the space is clean, well-lit, and has basic seating arrangements. Confirm reliable power availability at each site. Advise on backup solutions (e.g., generator, inverter) if necessary for the launch event. Plan for minimal, impactful decorations for the launch event (e.g., simple banners, foundation logo display)."
-      },
-      {
-        id: "m2_4",
-        title: "Launch Event Planning & Local Orientation",
-        shortDesc: "Coordinate concurrent launch events and orient local teams.",
-        longDesc: "Finalize the VIP guest list for each of the 5 launches. Send out formal, expedited invitations. Draft a concise launch event agenda and prepare talking points for Foundation leadership. Alert local and regional media about the upcoming events and prepare a brief press kit. Conduct a rapid, focused virtual/phone orientation for the 5 local SGVK point persons on their roles during the launch event."
-      },
-    ],
-  },
-  {
-    phase: "Phase 3: National Space Day Launch",
-    dates: "August 23rd, 2025",
-    milestones: [
-      {
-        id: "m3_1",
-        title: "Simultaneous Inaugural Launches of 5 SGVKs",
-        shortDesc: "Host parallel inauguration ceremonies across all 5 selected villages.",
-        longDesc: "Conduct the planned inauguration ceremonies concurrently in each of the 5 SGVK locations in the aspirational districts. Ensure adherence to the agenda, highlighting the SGVK's purpose and the Space Education Foundation's mission. Facilitate a brief, engaging demonstration of the available science equipment to showcase initial activities. Actively engage with local media present at each site to maximize visibility and impact. Capture high-quality photos and videos of all launch events for internal records and future promotions."
-      },
-    ],
-  },
-  {
-    phase: "Phase 4: Post-Launch Operationalization & Full Development",
-    dates: "August 24th, 2025 onwards",
-    milestones: [
-      {
-        id: "m4_1",
-        title: "Full Infrastructure Development",
-        shortDesc: "Complete construction/renovation and install all specialized equipment.",
-        longDesc: "Conduct detailed architectural/renovation assessments for each SGVK site based on long-term needs. Initiate full-scale construction or renovation work to establish a dedicated, well-equipped SGVK center in each village. Procure and install all remaining specialized equipment (e.g., advanced lab instruments, computer stations, robotics kits), comprehensive furniture, and extensive educational materials."
-      },
-      {
-        id: "m4_2",
-        title: "Comprehensive Training",
-        shortDesc: "Recruit and intensively train SGVK managers and facilitators.",
-        longDesc: "Initiate the recruitment process for dedicated, full-time SGVK Manager/Coordinator and multiple facilitators for each center. Design and conduct multi-week intensive training programs for the newly recruited staff. This should cover advanced astronomy and space science concepts, pedagogical techniques for hands-on learning, SGVK operational management, safety protocols, and effective community outreach strategies."
-      },
-      {
-        id: "m4_3",
-        title: "Program Rollout",
-        shortDesc: "Finalize curriculum and begin regular, structured educational programs.",
-        longDesc: "Finalize a detailed, module-wise curriculum for various target groups (school children, youth, general community) covering diverse STEM topics, including astronomy, coding, environmental science, and skill development. Begin with pilot educational programs and workshops in each SGVK, gathering feedback for refinement. Gradually expand to a full schedule of activities, including regular classes, sky gazing events, science fairs, public lectures, and specialized skill development workshops, ensuring alignment with the mission of 'Empowering Lives Through Science'."
-      },
-      {
-        id: "m4_4",
-        title: "Ongoing Partnership Development & Sustainability",
-        shortDesc: "Secure long-term agreements and engage with CSR initiatives.",
-        longDesc: "Pursue and finalize detailed, long-term collaboration agreements (comprehensive MoUs) with state education departments, rural development ministries, and science & technology departments for integrated support and sustainability. Actively engage with corporate social responsibility (CSR) initiatives and other philanthropic organizations for sustained funding, in-kind contributions, and volunteer support. Facilitate the formation of local SGVK Community Advisory Boards involving diverse stakeholders to ensure local ownership and relevance."
-      },
-      {
-        id: "m4_5",
-        title: "Robust Monitoring and Evaluation",
-        shortDesc: "Implement comprehensive M&E framework to track progress and impact.",
-        longDesc: "Establish a comprehensive baseline data collection system for each SGVK. Implement a robust data collection system for tracking daily/weekly attendance, program participation rates, and specific learning outcomes. Conduct regular (monthly/quarterly) performance reviews with local SGVK teams and community committees. Plan for annual external evaluations to measure the long-term socio-educational impact of the SGVK program in each adopted village."
-      },
-    ],
-  },
-];
-
-// Custom Hook for Scroll Animation
-const useInViewAnimation = (threshold = 0.1) => {
-  const ref = useRef(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.unobserve(entry.target); // Stop observing once in view
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGVK Launch Roadmap</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Brand Colors based on the provided logo */
+        :root {
+            --brand-dark-900: #1C1C1C; /* Deep Charcoal - Primary Background */
+            --brand-dark-800: #282828; /* Slightly lighter charcoal */
+            --brand-dark-700: #383838; /* Medium charcoal */
+            --brand-dark-600: #484848; /* Lighter charcoal for hover */
+            --brand-accent: #FFB800;  /* Vibrant Orange-Gold - Accent */
+            --brand-light: #E0E0E0;   /* Light Grey - Text/Stardust */
         }
-      },
-      { threshold }
-    );
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--brand-dark-900);
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
 
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, [threshold]);
+        /* Tailwind overrides for custom colors */
+        .bg-brand-dark-900 { background-color: var(--brand-dark-900); }
+        .bg-brand-dark-800 { background-color: var(--brand-dark-800); }
+        .bg-brand-dark-700 { background-color: var(--brand-dark-700); }
+        .bg-brand-dark-600 { background-color: var(--brand-dark-600); }
+        .text-brand-accent { color: var(--brand-accent); }
+        .text-brand-light { color: var(--brand-light); }
 
-  return [ref, inView];
-};
-
-// Milestone Card Component
-const MilestoneCard = ({ milestone, onClick }) => {
-  const [ref, inView] = useInViewAnimation(0.2); // Trigger when 20% visible
-
-  return (
-    <div
-      ref={ref}
-      className={`
-        bg-gradient-to-br from-brand-dark-700 to-brand-dark-900
-        rounded-xl p-5 mb-4 shadow-lg cursor-pointer
-        transform transition-all duration-300 ease-in-out
-        hover:scale-105 hover:shadow-2xl hover:bg-brand-dark-600
-        ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
-      `}
-      onClick={() => onClick(milestone)}
-    >
-      <h4 className="text-xl font-semibold text-brand-accent mb-2">{milestone.title}</h4>
-      <p className="text-brand-light text-sm">{milestone.shortDesc}</p>
-    </div>
-  );
-};
-
-// Phase Card Component
-const PhaseCard = ({ phaseData, onMilestoneClick }) => {
-  const phaseRef = useRef(null); // Ref for scrolling
-
-  return (
-    <div ref={phaseRef} id={`phase-${phaseData.phase.replace(/\s/g, '-')}`} className="mb-12">
-      <h3 className="text-4xl font-bold text-brand-light mb-4 text-center">
-        {phaseData.phase}
-      </h3>
-      <p className="text-lg text-brand-accent mb-8 text-center">{phaseData.dates}</p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {phaseData.milestones.map((milestone) => (
-          <MilestoneCard key={milestone.id} milestone={milestone} onClick={onMilestoneClick} />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// Modal Component
-const Modal = ({ isOpen, onClose, content }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div
-      className="fixed inset-0 bg-brand-dark-900 bg-opacity-80 flex items-center justify-center z-50 p-4"
-      onClick={onClose} // Close when clicking outside modal content
-    >
-      <div
-        className="bg-brand-dark-800 rounded-xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-out scale-95 opacity-0 animate-scaleIn"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal content
-      >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-brand-accent">{content.title}</h2>
-          <button
-            onClick={onClose}
-            className="text-brand-light hover:text-white text-3xl font-bold transition-transform duration-200 hover:rotate-90"
-            aria-label="Close modal"
-          >
-            &times;
-          </button>
-        </div>
-        <p className="text-brand-light leading-relaxed text-lg whitespace-pre-wrap">{content.longDesc}</p>
-      </div>
-    </div>
-  );
-};
-
-// Main App Component
-const App = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [modalContent, setModalContent] = useState({});
-  const phaseRefs = useRef({}); // To store refs for each phase for scrolling
-
-  // Callback to set ref for each phase
-  const setPhaseRef = useCallback((node, phaseId) => {
-    if (node) {
-      phaseRefs.current[phaseId] = node;
-    }
-  }, []);
-
-  const handleMilestoneClick = (milestone) => {
-    setModalContent(milestone);
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setModalContent({});
-  };
-
-  const scrollToPhase = (phaseId) => {
-    const targetId = `phase-${phaseId.replace(/\s/g, '-')}`;
-    const element = document.getElementById(targetId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-brand-dark-900 font-inter text-white">
-      {/* Tailwind CSS CDN - Ensure this is loaded in the HTML head if running standalone */}
-      <script src="https://cdn.tailwindcss.com"></script>
-      <style>
-        {`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-          body { font-family: 'Inter', sans-serif; }
-          /* Brand Colors based on the provided logo */
-          .bg-brand-dark-900 { background-color: #1C1C1C; } /* Deep Charcoal - Primary Background */
-          .bg-brand-dark-800 { background-color: #282828; } /* Slightly lighter charcoal */
-          .bg-brand-dark-700 { background-color: #383838; } /* Medium charcoal */
-          .bg-brand-dark-600 { background-color: #484848; } /* Lighter charcoal for hover */
-          .text-brand-accent { color: #FFB800; } /* Vibrant Orange-Gold - Accent */
-          .text-brand-light { color: #E0E0E0; } /* Light Grey - Text/Stardust */
-
-          /* Keyframe for modal animation */
-          @keyframes scaleIn {
+        /* Keyframe for modal animation */
+        @keyframes scaleIn {
             from { transform: scale(0.95); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
-          }
-          .animate-scaleIn {
+        }
+        .animate-scaleIn {
             animation: scaleIn 0.3s ease-out forwards;
-          }
-        `}
-      </style>
+        }
 
-      {/* Header */}
-      <header className="py-12 bg-brand-dark-800 shadow-xl text-center">
-        <h1 className="text-5xl font-extrabold text-brand-accent mb-4 leading-tight">
-          SGVK Launch Roadmap
+        /* Scroll-triggered animation classes */
+        .milestone-card {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .milestone-card.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--brand-dark-800);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--brand-accent);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e6a700; /* Slightly darker accent on hover */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="py-12 bg-brand-dark-800 shadow-xl text-center">
+        <h1 class="text-5xl font-extrabold text-brand-accent mb-4 leading-tight">
+            SGVK Launch Roadmap
         </h1>
-        <p className="text-xl text-brand-light max-w-3xl mx-auto">
-          Accelerated Plan: From Blueprint to Launch of 5 Space Gram Vigyan Kendras by National Space Day (August 23rd, 2025).
+        <p class="text-xl text-brand-light max-w-3xl mx-auto px-4">
+            Accelerated Plan: From Blueprint to Launch of 5 Space Gram Vigyan Kendras by National Space Day (August 23rd, 2025).
         </p>
-      </header>
+    </header>
 
-      {/* Navigation */}
-      <nav className="sticky top-0 bg-brand-dark-900 bg-opacity-95 backdrop-blur-sm z-40 py-4 shadow-md">
-        <div className="container mx-auto px-4 flex flex-wrap justify-center gap-3">
-          {roadmapData.map((phase, index) => (
-            <button
-              key={index}
-              onClick={() => scrollToPhase(phase.phase)}
-              className="px-5 py-2 rounded-full text-brand-light text-sm font-medium
-                         bg-brand-dark-700 hover:bg-brand-accent hover:text-white
-                         transition-all duration-300 ease-in-out shadow-md
-                         focus:outline-none focus:ring-2 focus:ring-brand-accent focus:ring-opacity-75"
-            >
-              {phase.phase.split(':')[0].trim()}
-            </button>
-          ))}
+    <!-- Navigation Bar (Sticky) -->
+    <nav class="sticky top-0 bg-brand-dark-900 bg-opacity-95 backdrop-blur-sm z-40 py-4 shadow-md">
+        <div id="navigation-buttons" class="container mx-auto px-4 flex flex-wrap justify-center gap-3">
+            <!-- Navigation buttons will be injected here by JavaScript -->
         </div>
-      </nav>
+    </nav>
 
-      {/* Roadmap Content */}
-      <main className="container mx-auto px-4 py-12">
-        {roadmapData.map((phaseData, index) => (
-          <PhaseCard
-            key={index}
-            phaseData={phaseData}
-            onMilestoneClick={handleMilestoneClick}
-            ref={el => setPhaseRef(el, phaseData.phase)} // Set ref for scrolling
-          />
-        ))}
-      </main>
+    <!-- Roadmap Content -->
+    <main id="roadmap-content" class="container mx-auto px-4 py-12">
+        <!-- Phases and Milestones will be injected here by JavaScript -->
+    </main>
 
-      {/* Modal for detailed milestone info */}
-      <Modal isOpen={showModal} onClose={handleCloseModal} content={modalContent} />
+    <!-- Modal for Detailed Milestone Information -->
+    <div id="milestone-modal" class="fixed inset-0 bg-brand-dark-900 bg-opacity-80 flex items-center justify-center z-50 p-4 hidden">
+        <div class="bg-brand-dark-800 rounded-xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-out scale-95 opacity-0" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <h2 id="modal-title" class="text-3xl font-bold text-brand-accent"></h2>
+                <button id="close-modal-btn" class="text-brand-light hover:text-white text-3xl font-bold transition-transform duration-200 hover:rotate-90" aria-label="Close modal">
+                    &times;
+                </button>
+            </div>
+            <p id="modal-long-desc" class="text-brand-light leading-relaxed text-lg whitespace-pre-wrap"></p>
+        </div>
     </div>
-  );
-};
 
-export default App;
+    <script>
+        // Roadmap Data (same as in React version)
+        const roadmapData = [
+            {
+                phase: "Phase 0: Pre-Selection & Backend Preparation",
+                dates: "July 17th – July 22nd, 2025",
+                milestones: [
+                    {
+                        id: "m0_1",
+                        title: "Strategic District/Village Identification",
+                        shortDesc: "Identify potential high-impact areas and villages for SGVK establishment.",
+                        longDesc: "Review internal data, previous outreach efforts, and governmental lists of 'aspirational districts' to identify potential high-impact areas. Conduct rapid online research for villages within these districts that have demonstrated community engagement or prior development initiatives. Prioritize 10-15 potential villages (2-3 per aspirational district) based on likely readiness, existing basic infrastructure, and ease of access for a rapid inaugural launch."
+                    },
+                    {
+                        id: "m0_2",
+                        title: "Internal Team Mobilization & Roles Assignment",
+                        shortDesc: "Form the core accelerated launch team and assign clear responsibilities.",
+                        longDesc: "Designate a Core Project Lead responsible for overall coordination and final decision-making. Appoint Sub-Leads for Applications & Selection, Logistics & Procurement, Site Readiness & Launch Events, and Communications & Partnerships. Brief the entire team on the compressed timeline and the 'inaugural launch' objective. Establish daily stand-up meetings for rapid progress tracking and immediate problem-solving."
+                    },
+                    {
+                        id: "m0_3",
+                        title: "Draft Streamlined Application & MoU Templates",
+                        shortDesc: "Prepare concise Expression of Interest (EoI) and simplified MoU forms.",
+                        longDesc: "Develop a highly concise (1-2 page) Expression of Interest (EoI) form focusing on critical information. Draft a highly simplified, 1-page Memorandum of Understanding (MoU) template outlining mutual commitment for the *inaugural launch event*. Obtain rapid legal counsel review and internal organizational approval for both templates to minimize bureaucratic hurdles."
+                    },
+                    {
+                        id: "m0_4",
+                        title: "Initial Budget Allocation & Procurement Plan",
+                        shortDesc: "Secure emergency funds and plan rapid procurement for demonstration equipment.",
+                        longDesc: "Secure an initial, expedited budget allocation specifically for the 5 inaugural SGVK launches, covering essential demonstration equipment, travel for rapid site visits, and launch event costs. Identify pre-qualified vendors for essential demonstration equipment (telescopes, projectors, science kits, branding). Obtain pre-approval for fast-track purchasing and direct shipping immediately upon final village selection."
+                    },
+                    {
+                        id: "m0_5",
+                        title: "Communications & Outreach Strategy Finalization",
+                        shortDesc: "Finalize announcement text and identify key district contacts for rapid dissemination.",
+                        longDesc: "Write the official press release/announcement for July 23rd, clearly stating the SGVK vision, the ambitious National Space Day launch date, the streamlined application process, and the criteria. Identify specific, high-level contacts (e.g., District Collector, CEO Zila Parishad, District Education Officer) in the 5 aspirational districts for direct, personalized outreach. Prepare ready-to-publish content for the Foundation's website and social media channels."
+                    },
+                ],
+            },
+            {
+                phase: "Phase 1: Rapid Selection & Initial Formalization",
+                dates: "July 23rd – August 5th, 2025",
+                milestones: [
+                    {
+                        id: "m1_1",
+                        title: "Official Announcement of Call for Applications",
+                        shortDesc: "Publicly release the SGVK application announcement across all channels.",
+                        longDesc: "Publicly release the SGVK application announcement on the Space Education Foundation's official website. Post the announcement across all relevant social media platforms (Facebook, Twitter, Instagram, LinkedIn). Send direct, personalized emails/WhatsApp messages to the identified high-level district administration contacts and existing NGO networks in the aspirational districts. Distribute press releases to local and regional media outlets, emphasizing the National Space Day launch."
+                    },
+                    {
+                        id: "m1_2",
+                        title: "Accelerated Application Submission & Initial Screening",
+                        shortDesc: "Implement streamlined application process and daily review of incoming EoIs.",
+                        longDesc: "Set up a dedicated email inbox or activate an online form for EoI submissions, with automated acknowledgment. Assign a dedicated team member(s) to conduct daily, rigorous review and initial scoring of incoming EoIs against the pre-defined basic criteria. Maintain a real-time tracking sheet of all applications received, screened, and shortlisted. Flag applications from the Phase 0 'hotlist' for priority review."
+                    },
+                    {
+                        id: "m1_3",
+                        title: "Remote Assessment & Preliminary Shortlisting",
+                        shortDesc: "Conduct virtual meetings/phone interviews with top-scoring applicants.",
+                        longDesc: "Schedule and conduct short (30-45 minute) virtual meetings (e.g., Google Meet, WhatsApp video call) or intensive phone interviews with Gram Panchayat heads or designated village representatives from the top-scoring applications. During interviews, verify basic information, assess the level of community commitment, confirm the availability of a suitable (even basic) space, and gauge their understanding of the SGVK vision. Compile a refined shortlist of the top 2-3 strongest, most ready candidates per aspirational district (total 10-15 villages)."
+                    },
+                    {
+                        id: "m1_4",
+                        title: "Rapid Physical Site Visits & Final Selection",
+                        shortDesc: "Deploy agile teams for quick site visits and make final village selections.",
+                        longDesc: "Deploy small, agile site visit teams (1-2 persons, potentially leveraging existing field staff or local partners) to conduct quick (half-day to full-day per village) visits to the shortlisted villages. On-site, conduct a visual inspection of the proposed SGVK space, assess basic amenities, and engage briefly with local leaders and community members to confirm enthusiasm. Conduct brief, direct meetings with Gram Panchayat leaders to discuss immediate mutual commitments required for the August 23rd launch, including the signing of the streamlined MoU. Central project lead to make the final selection of 5 villages (one per aspirational district) by the end of August 5th, based on site visit reports and overall readiness. Immediately prepare and dispatch the streamlined MoUs for the 5 selected villages, ready for signing."
+                    },
+                ],
+            },
+            {
+                phase: "Phase 2: Inaugural Setup & Launch Preparation",
+                dates: "August 6th – August 22nd, 2025",
+                milestones: [
+                    {
+                        id: "m2_1",
+                        title: "Fast-Tracked Formal Agreements & Core Local Team Identification",
+                        shortDesc: "Secure signed MoUs and identify key local point persons for each SGVK.",
+                        longDesc: "Dispatch Foundation representatives (or leverage local contacts/partners) to the 5 selected villages for immediate signing of the streamlined MoU with the Gram Panchayat. Ensure signed copies are returned to the central office promptly. In each village, identify and onboard at least 1-2 key local persons who can serve as the initial point person/volunteer for the SGVK launch event and initial demonstrations. Establish direct and reliable communication channels (e.g., dedicated WhatsApp group, frequent phone calls) with these 5 local point persons."
+                    },
+                    {
+                        id: "m2_2",
+                        title: "Essential Equipment Procurement & Dispatch",
+                        shortDesc: "Purchase and rapidly deliver basic demonstration equipment to all 5 sites.",
+                        longDesc: "Execute immediate purchase orders for the pre-approved essential demonstration equipment (5 small/medium telescopes, 5 portable projectors, 5 basic science kits, essential stationery, and initial branding materials like a banner). Coordinate rapid, direct-to-village logistics for the delivery of this equipment to each of the 5 SGVK locations. Utilize courier services known for efficiency in rural areas. Confirm receipt of equipment by the designated local point persons and have them conduct a basic inventory check."
+                    },
+                    {
+                        id: "m2_3",
+                        title: "Basic Site Readiness & Logistics for Launch",
+                        shortDesc: "Prepare the designated space for the inauguration and confirm logistics.",
+                        longDesc: "Guide the local point persons (via phone/video calls) on preparing the designated space for the inauguration. This primarily involves ensuring the space is clean, well-lit, and has basic seating arrangements. Confirm reliable power availability at each site. Advise on backup solutions (e.g., generator, inverter) if necessary for the launch event. Plan for minimal, impactful decorations for the launch event (e.g., simple banners, foundation logo display)."
+                    },
+                    {
+                        id: "m2_4",
+                        title: "Launch Event Planning & Local Orientation",
+                        shortDesc: "Coordinate concurrent launch events and orient local teams.",
+                        longDesc: "Finalize the VIP guest list for each of the 5 launches. Send out formal, expedited invitations. Draft a concise launch event agenda and prepare talking points for Foundation leadership. Alert local and regional media about the upcoming events and prepare a brief press kit. Conduct a rapid, focused virtual/phone orientation for the 5 local SGVK point persons on their roles during the launch event."
+                    },
+                ],
+            },
+            {
+                phase: "Phase 3: National Space Day Launch",
+                dates: "August 23rd, 2025",
+                milestones: [
+                    {
+                        id: "m3_1",
+                        title: "Simultaneous Inaugural Launches of 5 SGVKs",
+                        shortDesc: "Host parallel inauguration ceremonies across all 5 selected villages.",
+                        longDesc: "Conduct the planned inauguration ceremonies concurrently in each of the 5 SGVK locations in the aspirational districts. Ensure adherence to the agenda, highlighting the SGVK's purpose and the Space Education Foundation's mission. Facilitate a brief, engaging demonstration of the available science equipment to showcase initial activities. Actively engage with local media present at each site to maximize visibility and impact. Capture high-quality photos and videos of all launch events for internal records and future promotions."
+                    },
+                ],
+            },
+            {
+                phase: "Phase 4: Post-Launch Operationalization & Full Development",
+                dates: "August 24th, 2025 onwards",
+                milestones: [
+                    {
+                        id: "m4_1",
+                        title: "Full Infrastructure Development",
+                        shortDesc: "Complete construction/renovation and install all specialized equipment.",
+                        longDesc: "Conduct detailed architectural/renovation assessments for each SGVK site based on long-term needs. Initiate full-scale construction or renovation work to establish a dedicated, well-equipped SGVK center in each village. Procure and install all remaining specialized equipment (e.g., advanced lab instruments, computer stations, robotics kits), comprehensive furniture, and extensive educational materials."
+                    },
+                    {
+                        id: "m4_2",
+                        title: "Comprehensive Training",
+                        shortDesc: "Recruit and intensively train SGVK managers and facilitators.",
+                        longDesc: "Initiate the recruitment process for dedicated, full-time SGVK Manager/Coordinator and multiple facilitators for each center. Design and conduct multi-week intensive training programs for the newly recruited staff. This should cover advanced astronomy and space science concepts, pedagogical techniques for hands-on learning, SGVK operational management, safety protocols, and effective community outreach strategies."
+                    },
+                    {
+                        id: "m4_3",
+                        title: "Program Rollout",
+                        shortDesc: "Finalize curriculum and begin regular, structured educational programs.",
+                        longDesc: "Finalize a detailed, module-wise curriculum for various target groups (school children, youth, general community) covering diverse STEM topics, including astronomy, coding, environmental science, and skill development. Begin with pilot educational programs and workshops in each SGVK, gathering feedback for refinement. Gradually expand to a full schedule of activities, including regular classes, sky gazing events, science fairs, public lectures, and specialized skill development workshops, ensuring alignment with the mission of 'Empowering Lives Through Science'."
+                    },
+                    {
+                        id: "m4_4",
+                        title: "Ongoing Partnership Development & Sustainability",
+                        shortDesc: "Secure long-term agreements and engage with CSR initiatives.",
+                        longDesc: "Pursue and finalize detailed, long-term collaboration agreements (comprehensive MoUs) with state education departments, rural development ministries, and science & technology departments for integrated support and sustainability. Actively engage with corporate social responsibility (CSR) initiatives and other philanthropic organizations for sustained funding, in-kind contributions, and volunteer support. Facilitate the formation of local SGVK Community Advisory Boards involving diverse stakeholders to ensure local ownership and relevance."
+                    },
+                    {
+                        id: "m4_5",
+                        title: "Robust Monitoring and Evaluation",
+                        shortDesc: "Implement comprehensive M&E framework to track progress and impact.",
+                        longDesc: "Establish a comprehensive baseline data collection system for each SGVK. Implement a robust data collection system for tracking daily/weekly attendance, program participation rates, and specific learning outcomes. Conduct regular (monthly/quarterly) performance reviews with local SGVK teams and community committees. Plan for annual external evaluations to measure the long-term socio-educational impact of the SGVK program in each adopted village."
+                    },
+                ],
+            },
+        ];
+
+        // --- JavaScript for Dynamic Content and Interactivity ---
+
+        /**
+         * Generates and appends a milestone card HTML element.
+         * @param {Object} milestone - The milestone data object.
+         * @param {HTMLElement} container - The container to append the card to.
+         * @param {Function} onClickHandler - Function to call on card click.
+         */
+        function createMilestoneCard(milestone, container, onClickHandler) {
+            const card = document.createElement('div');
+            card.className = `
+                milestone-card
+                bg-gradient-to-br from-brand-dark-700 to-brand-dark-900
+                rounded-xl p-5 mb-4 shadow-lg cursor-pointer
+                transform transition-all duration-300 ease-in-out
+                hover:scale-105 hover:shadow-2xl hover:bg-brand-dark-600
+            `;
+            card.innerHTML = `
+                <h4 class="text-xl font-semibold text-brand-accent mb-2">${milestone.title}</h4>
+                <p class="text-brand-light text-sm">${milestone.shortDesc}</p>
+            `;
+            card.addEventListener('click', () => onClickHandler(milestone));
+            container.appendChild(card);
+            return card; // Return the card for IntersectionObserver
+        }
+
+        /**
+         * Handles opening the modal with specific milestone content.
+         * @param {Object} milestone - The milestone data to display in the modal.
+         */
+        function openModal(milestone) {
+            const modal = document.getElementById('milestone-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalLongDesc = document.getElementById('modal-long-desc');
+            const modalContentDiv = modal.querySelector('div:nth-child(1)'); // The inner content div
+
+            modalTitle.textContent = milestone.title;
+            modalLongDesc.textContent = milestone.longDesc;
+            modal.classList.remove('hidden');
+
+            // Trigger animation
+            modalContentDiv.classList.remove('opacity-0', 'scale-95');
+            modalContentDiv.classList.add('animate-scaleIn');
+        }
+
+        /**
+         * Handles closing the modal.
+         */
+        function closeModal() {
+            const modal = document.getElementById('milestone-modal');
+            const modalContentDiv = modal.querySelector('div:nth-child(1)'); // The inner content div
+
+            // Reverse animation
+            modalContentDiv.classList.remove('animate-scaleIn');
+            modalContentDiv.classList.add('opacity-0', 'scale-95');
+
+            // Hide after animation
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300); // Match animation duration
+        }
+
+        /**
+         * Smoothly scrolls to a target element.
+         * @param {string} targetId - The ID of the element to scroll to.
+         */
+        function scrollToPhase(targetId) {
+            const element = document.getElementById(targetId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // --- Event Listeners and Initialization ---
+        window.onload = function() {
+            const roadmapContent = document.getElementById('roadmap-content');
+            const navigationButtonsContainer = document.getElementById('navigation-buttons');
+            const modal = document.getElementById('milestone-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+
+            // Initialize Intersection Observer for scroll animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    }
+                });
+            }, { threshold: 0.2 }); // Trigger when 20% of the element is visible
+
+            // Populate Roadmap Content and Navigation
+            roadmapData.forEach(phaseData => {
+                // Create Phase Section
+                const phaseSection = document.createElement('div');
+                phaseSection.id = `phase-${phaseData.phase.replace(/\s/g, '-')}`;
+                phaseSection.className = 'mb-12';
+                phaseSection.innerHTML = `
+                    <h3 class="text-4xl font-bold text-brand-light mb-4 text-center">
+                        ${phaseData.phase}
+                    </h3>
+                    <p class="text-lg text-brand-accent mb-8 text-center">${phaseData.dates}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                `;
+                roadmapContent.appendChild(phaseSection);
+
+                const milestonesGrid = phaseSection.querySelector('div.grid');
+
+                // Create Milestone Cards for the current phase
+                phaseData.milestones.forEach(milestone => {
+                    const card = createMilestoneCard(milestone, milestonesGrid, openModal);
+                    observer.observe(card); // Observe each milestone card for animation
+                });
+
+                // Create Navigation Button
+                const navButton = document.createElement('button');
+                navButton.className = `
+                    px-5 py-2 rounded-full text-brand-light text-sm font-medium
+                    bg-brand-dark-700 hover:bg-brand-accent hover:text-white
+                    transition-all duration-300 ease-in-out shadow-md
+                    focus:outline-none focus:ring-2 focus:ring-brand-accent focus:ring-opacity-75
+                `;
+                navButton.textContent = phaseData.phase.split(':')[0].trim();
+                navButton.addEventListener('click', () => scrollToPhase(phaseSection.id));
+                navigationButtonsContainer.appendChild(navButton);
+            });
+
+            // Attach event listener to close modal button
+            closeModalBtn.addEventListener('click', closeModal);
+            // Attach event listener to modal overlay to close it
+            modal.addEventListener('click', closeModal);
+        };
+    </script>
+
+</body>
+</html>
